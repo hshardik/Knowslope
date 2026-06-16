@@ -1,5 +1,7 @@
 # KnowSlope
 
+**Live at [knowslope.com](https://knowslope.com)**
+
 **Transform team knowledge buried in chat into structured, searchable documentation — automatically.**
 
 KnowSlope captures unstructured knowledge from Slack threads, screenshots, and ad-hoc decisions, then uses AI to convert them into structured **Knows**: publishable, discoverable knowledge assets that live beyond the chat window.
