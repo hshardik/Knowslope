@@ -1,73 +1,185 @@
-# Welcome to your Lovable project
+# KnowSlope
 
-## Project info
+**Transform team knowledge buried in chat into structured, searchable documentation — automatically.**
 
-**URL**: https://lovable.dev/projects/4b2329f1-3da1-4f65-9d53-ca27142b0896
+KnowSlope captures unstructured knowledge from Slack threads, screenshots, and ad-hoc decisions, then uses AI to convert them into structured **Knows**: publishable, discoverable knowledge assets that live beyond the chat window.
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## The Problem
 
-**Use Lovable**
+Institutional knowledge dies in chat. Engineering decisions, support runbooks, QA edge cases, product tradeoffs — all of it gets buried in Slack threads that no one can find six months later. Copy-pasting into Notion or Confluence is manual, inconsistent, and nobody does it consistently.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/4b2329f1-3da1-4f65-9d53-ca27142b0896) and start prompting.
+**KnowSlope solves this by making capture and structuring automatic.**
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## Core Concepts
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Know
+A **Know** is a structured knowledge asset — a single unit of documented truth extracted from real team conversations. Knows are categorized, tagged, and searchable. They replace the "ask someone who was in that meeting" pattern with something actually discoverable.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Slope
+A **Slope** is a reusable intent + rules + output shape that guides AI drafting. It's not just a prompt — it encodes your team's tone, formatting standards, and policies. When a new Know is drafted from a Slack thread, the right Slope ensures the output matches your team's standards without manual reformatting every time.
 
-Follow these steps:
+### KnowSlope
+The hub where Knows live — organized by category, type, and status, searchable and accessible to the right people based on their role.
+
+---
+
+## Features
+
+- **Slack Integration** — Connect your workspace via OAuth. Incoming threads are captured via webhook and queued for processing.
+- **AI-Powered Drafting** — Edge Functions analyze Slack threads and generate structured Know drafts using the team's configured Slopes.
+- **Incoming Items Queue** — A dedicated review queue where captured Slack items wait to be processed, edited, and published.
+- **Wizard-Style Doc Creation** — Step-by-step flow for creating Knows manually with inline preview and category selection.
+- **Role-Based Access** — Admin, Publisher, and Member roles with whitelist-controlled publishing permissions.
+- **Card-Based Dashboard** — Filter Knows by category, type, and status. Full-text search across the knowledge base.
+- **Dark-Themed UI** — Typography-led design with kinetic scroll animations, glassmorphism cards, and consistent design tokens.
+- **Mobile Responsive** — Clean filter/search UX that works on any screen size.
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 18, Vite, TypeScript |
+| Styling | Tailwind CSS, shadcn/ui |
+| Backend | Supabase (PostgreSQL + Row Level Security) |
+| Edge Functions | Deno / Supabase Functions |
+| Auth | Supabase Auth |
+| Integrations | Slack OAuth, Slack Webhooks |
+
+---
+
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── landing/        # Marketing page sections and animations
+│   ├── document/       # Know editor and preview components
+│   └── ui/             # shadcn/ui primitives
+├── pages/
+│   ├── Landing.tsx     # Public marketing page
+│   ├── Index.tsx       # Dashboard (authenticated)
+│   ├── NewDocWizard.tsx
+│   ├── DocumentDetail.tsx
+│   ├── DocumentEdit.tsx
+│   ├── SlackSetup.tsx
+│   └── Settings.tsx
+├── hooks/              # Data fetching and state hooks
+├── contexts/           # Auth context
+└── integrations/
+    └── supabase/       # Generated types and client
+
+supabase/
+├── functions/          # Edge Functions
+│   ├── slack-oauth/
+│   ├── slack-webhook/
+│   ├── analyze-slack-thread/
+│   ├── process-incoming-item/
+│   ├── generate-know-preview/
+│   └── store-slack-credentials/
+└── migrations/         # Database schema history
+```
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+ and npm
+- A [Supabase](https://supabase.com) project
+- A Slack app with OAuth and webhook permissions configured
+
+### Installation
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Clone the repo
+git clone https://github.com/hshardik/Knowslope.git
+cd Knowslope
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Install dependencies
+npm install
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Set up environment variables
+cp .env.example .env
+# Fill in your Supabase credentials in .env
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start the dev server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Environment Variables
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```env
+VITE_SUPABASE_URL=https://your-project-id.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_anon_key
+VITE_SUPABASE_PROJECT_ID=your_project_id
+```
 
-**Use GitHub Codespaces**
+### Supabase Setup
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Push the migrations to your Supabase project:
 
-## What technologies are used for this project?
+```sh
+npx supabase db push
+```
 
-This project is built with:
+Deploy the Edge Functions:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+```sh
+npx supabase functions deploy
+```
 
-## How can I deploy this project?
+---
 
-Simply open [Lovable](https://lovable.dev/projects/4b2329f1-3da1-4f65-9d53-ca27142b0896) and click on Share -> Publish.
+## User Flow
 
-## Can I connect a custom domain to my Lovable project?
+```
+Connect Slack workspace
+        ↓
+Incoming threads captured via webhook
+        ↓
+Items appear in the Incoming Queue
+        ↓
+AI drafts a Know using the matching Slope
+        ↓
+Reviewer edits and refines
+        ↓
+Publisher approves and publishes
+        ↓
+Know is searchable in the KnowSlope dashboard
+```
 
-Yes, you can!
+---
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Roles
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+| Role | Capabilities |
+|---|---|
+| **Admin** | Full access — manage members, Slopes, settings, and publish |
+| **Publisher** | Create, edit, and publish Knows |
+| **Member** | Read and search published Knows |
+
+Publishing is whitelist-controlled. Admins manage who holds Publisher access.
+
+---
+
+## Who It's For
+
+KnowSlope is built for teams where knowledge gets lost in chat:
+
+- **QA teams** — capture edge cases and regression context from Slack threads
+- **Support teams** — turn recurring issue discussions into searchable runbooks
+- **Product teams** — preserve decision rationale and tradeoff discussions
+- **Engineering teams** — document architectural decisions and tribal knowledge before it walks out the door
+
+---
+
+## License
+
+MIT
