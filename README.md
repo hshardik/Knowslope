@@ -4,6 +4,12 @@
 
 **Transform team knowledge buried in chat into structured, searchable documentation — automatically.**
 
+## Preview
+
+| Laptop | iPad | iPhone |
+|:---:|:---:|:---:|
+| ![Laptop](assets/Laptop.png) | ![iPad](assets/iPad.png) | ![iPhone](assets/iPhone.png) |
+
 KnowSlope captures unstructured knowledge from Slack threads, screenshots, and ad-hoc decisions, then uses AI to convert them into structured **Knows**: publishable, discoverable knowledge assets that live beyond the chat window.
 
 ---
