@@ -1,0 +1,16 @@
+project_id = "mwvuwzhojgklfqleqktm"
+
+[functions.slack-oauth]
+verify_jwt = false
+
+[functions.slack-webhook]
+verify_jwt = false
+
+[functions.analyze-slack-thread]
+verify_jwt = false
+
+[functions.process-incoming-item]
+verify_jwt = false
+
+[functions.generate-know-preview]
+verify_jwt = false
